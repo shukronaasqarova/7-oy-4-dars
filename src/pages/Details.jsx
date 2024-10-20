@@ -47,7 +47,7 @@ function Details() {
             <img
               src={product.attributes.image}
               alt={product.attributes.title}
-              className="rounded-lg shadow-md w-full h-64 object-cover mb-6" // Rasm va ma'lumotlar o'rtasidagi masofa oshirildi
+              className="rounded-lg shadow-md w-full h-64 object-cover mb-6" 
             />
             <div className="ml-4 w-full flex flex-col justify-between">
               <div>

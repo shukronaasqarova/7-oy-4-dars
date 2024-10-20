@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { http } from '../axios'; 
+import { http } from '../axios';
 import { useNavigate } from 'react-router-dom';
+import '../App.css';
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -10,13 +11,13 @@ function Home() {
     http.get('products?featured=true')
       .then(response => {
         if (response.status === 200) {
-          setProducts(response.data.data); 
+          setProducts(response.data.data);
         }
       })
       .catch(err => {
-        console.log(err); 
+        console.log(err);
       });
-  }, []); 
+  }, []);
 
   function handleRedirect(id) {
     navigate(`/details/${id}`);
@@ -24,7 +25,7 @@ function Home() {
 
   return (
     <div className="min-h-screen py-10">
-      <div className="flex justify-between items-center container mx-auto px-6 py-16">
+      <div className="flex justify-around items-center container mx-auto px-6 py-16">
         <div className="max-w-lg">
           <h1 className="text-5xl font-bold text-gray-600 mb-6 ">
             We are changing <br /> the way people <br /> shop
@@ -40,34 +41,33 @@ function Home() {
       </div>
 
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-8">
-          Featured Products
-        </h2>
-        <div className="flex flex-wrap gap-6 justify-center">
+        <h2 className="text-3xl font-semibold text-gray-600 mb-4 ml-[125px] mt-20">Featured Products</h2>
+        <hr />
+        <div className="flex flex-wrap gap-8 justify-center ">
           {
             products.length > 0 ? (
               products.map(product => (
-                <div 
+                <div
                   key={product.id}
-                  className="w-80 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden"
+                  className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-20 p-4" // Kenglik o'zgartirildi
                   onClick={() => handleRedirect(product.id)}
                 >
-                  <img 
-                    className="h-56 w-full object-cover" 
-                    src={product.attributes.image} 
-                    alt={product.attributes.title} 
+                  <img
+                    className="w-full h-56 object-cover rounded-xl"
+                    src={product.attributes.image}
+                    alt={product.attributes.title}
                   />
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold text-gray-800">{product.attributes.title}</h3>
-                    <h3 className="text-xl font-semibold text-gray-800">${product.attributes.price}</h3>
-
+                  <div className="mt-2 flex flex-col items-center justify-center">
+                    <h3 className="text-xl font-semibold text-gray-600 mt-5">{product.attributes.title}</h3>
+                    <h3 className="text-xl font-semibold text-gray-600">${product.attributes.price}</h3>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-gray-600 text-center">No products found.</p> 
+              <p className="text-gray-600 text-center">No products found.</p>
             )
           }
+
         </div>
       </div>
     </div>

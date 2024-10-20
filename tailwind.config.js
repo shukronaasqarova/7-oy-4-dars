@@ -5,6 +5,8 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    darkMode: 'class', // dark mode klassini ishga tushirish
+
     extend: {},
   },
   plugins: [require('daisyui')],
