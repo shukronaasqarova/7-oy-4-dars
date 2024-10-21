@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { http } from "../axios"; // Ensure axios is set up correctly
+import { http } from "../axios"; 
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -28,7 +28,7 @@ function Products() {
           setProducts(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error(error);
       } finally {
         setLoading(false);
       }
@@ -64,7 +64,6 @@ function Products() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8 text-center">Products</h1>
 
-      {/* Filters */}
       <div className="mb-6 p-6 border rounded-lg shadow-lg bg-white flex flex-col md:flex-row md:items-center">
         <input
           type="text"
@@ -99,7 +98,7 @@ function Products() {
           <option value="Company3">Company 3</option>
         </select>
         <button
-          onClick={() => setFilters((prev) => ({ ...prev }))} // No need to do anything here, just used for update
+          onClick={() => setFilters((prev) => ({ ...prev }))}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105"
         >
           Search
@@ -124,12 +123,12 @@ function Products() {
         </div>
       </div>
 
-      {/* Products */}
-      <div className="flex flex-wrap gap-4 justify-center"> {/* gap-4 for closer spacing */}
+ 
+      <div className="flex flex-wrap gap-4 justify-center"> 
         {products.length > 0 ? (
           products.map((product) => (
             <Link
-              to={`/details/${product.id}`} // Link to details page
+              to={`/details/${product.id}`} 
               key={product.id}
               className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-4 p-4" // Changed mt-20 to mt-4
             >
