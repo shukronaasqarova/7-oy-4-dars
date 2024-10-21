@@ -23,6 +23,12 @@ function App() {
   let params = useParams();
 
   useEffect(() => {
+    if (localStorage.getItem('cart')) {
+      setCart(JSON.parse(localStorage.getItem('cart')))
+    }
+  }, [])
+
+  useEffect(() => {
     if (localStorage.getItem('token')) {
       setToken(localStorage.getItem('token'));
     } else {

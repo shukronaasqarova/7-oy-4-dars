@@ -22,6 +22,10 @@ function Home() {
   function handleRedirect(id) {
     navigate(`/details/${id}`);
   }
+  function handleProductsPage(e){
+    e.preventDefault()
+    navigate('/products')
+  }
 
   return (
     <div className="min-h-screen py-10">
@@ -33,7 +37,7 @@ function Home() {
           <p className="text-gray-600 mb-8">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempore repellat explicabo enim soluta temporibus asperiores aut obcaecati perferendis porro nobis.
           </p>
-          <button className="btn btn-primary">OUR PRODUCTS</button>
+          <button onClick={handleProductsPage} className="btn btn-primary">OUR PRODUCTS</button>
         </div>
         <div className="flex justify-center items-center">
           <img src="https://picsum.photos/400/300" className="rounded-lg shadow-2xl" alt="Example" />
