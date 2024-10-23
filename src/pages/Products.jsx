@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { http } from "../axios"; 
+import { http } from "../axios";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -93,10 +93,8 @@ function Products() {
           className="border rounded-lg p-2 mb-4 md:mb-0 md:mr-4 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="all">All Companies</option>
-          <option value="Company1">Company 1</option>
-          <option value="Company2">Company 2</option>
-          <option value="Company3">Company 3</option>
         </select>
+
         <button
           onClick={() => setFilters((prev) => ({ ...prev }))}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105"
@@ -123,14 +121,28 @@ function Products() {
         </div>
       </div>
 
- 
-      <div className="flex flex-wrap gap-4 justify-center"> 
+
+      <div className="mb-6 p-6 border rounded-lg shadow-lg bg-white">
+        <label htmlFor="price" className="block text-lg font-medium text-gray-700">Price: ${filters.price}</label>
+        <input
+          type="range"
+          name="price"
+          id="price"
+          min="0"
+          max="100000"
+          value={filters.price}
+          onChange={handleFilterChange}
+          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+        />
+      </div>
+
+      <div className="flex flex-wrap gap-4 justify-center">
         {products.length > 0 ? (
           products.map((product) => (
             <Link
-              to={`/details/${product.id}`} 
+              to={`/details/${product.id}`}
               key={product.id}
-              className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-4 p-4" // Changed mt-20 to mt-4
+              className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-4 p-4"
             >
               <img
                 className="w-full h-56 object-cover rounded-xl"

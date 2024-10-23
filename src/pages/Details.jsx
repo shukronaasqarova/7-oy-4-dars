@@ -1,18 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import { http } from "../axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { CartContext } from "../App"; 
 
 function Details() {
   const [product, setProduct] = useState({});
   const params = useParams();
   const { id } = params;
   const [color, setColor] = useState("");
+  const [count, setCount] = useState(1);
+  const { cart, setCart } = useContext(CartContext); 
+
 
   useEffect(() => {
     http
-      .get(`products/${id}`)
+      .get(`products/${id}`) 
       .then((data) => {
         if (data.status === 200) {
           console.log(data.data.data);
@@ -24,6 +28,21 @@ function Details() {
         console.log(err);
       });
   }, [id]);
+
+
+  function handleSetCart(e) {
+    e.preventDefault();
+    const updatedProduct = { ...product, selectedColor: color, quantity: count };
+
+    setCart([...cart, updatedProduct]);
+
+    let storage = [];
+    if (localStorage.getItem('cart')) {
+      storage = JSON.parse(localStorage.getItem('cart'));
+    }
+    storage.push(updatedProduct);
+    localStorage.setItem('cart', JSON.stringify(storage));
+  }
 
   return (
     <div className="container pl-56 pb-11 pr-56">
@@ -80,16 +99,23 @@ function Details() {
               </div>
               <div>
                 <p className="pt-5 text-lg text-slate-500 pb-3">Amount</p>
-                <select className="w-72 bg-slate-100 pt-3 pb-3 pr-3 rounded-md border pl-3">
-                  {[...Array(9).keys()].map((i) => (
-                    <option key={i} value={i + 1}>
+                <select
+                  value={count}
+                  onChange={(e) => setCount(parseInt(e.target.value))}
+                  className="w-72 bg-slate-100 pt-3 pb-3 pr-3 rounded-md border pl-3"
+                >
+                  {[...Array(10)].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>
                       {i + 1}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="pt-9">
-                <button className="bg-blue-600 p-3 rounded-md text-sm text-slate-200 font-semibold">
+                <button
+                  onClick={handleSetCart}
+                  className="bg-blue-600 p-3 rounded-md text-sm text-slate-200 font-semibold"
+                >
                   ADD TO BAG
                 </button>
               </div>

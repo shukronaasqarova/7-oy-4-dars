@@ -3,11 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Theme from '../components/theme';
-import { ThemeContext } from '../App';
+import { CartContext, ThemeContext } from '../App';
 
 function MainLayout({ children }) {
+  const { cart } = useContext(CartContext); 
   const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
+
+  const token = localStorage.getItem('token');
 
   function handleC(e) {
     e.preventDefault();
@@ -29,16 +32,29 @@ function MainLayout({ children }) {
           <Link to='/about' className="text-gray-600 hover:bg-gray-800 hover:text-white p-2 rounded-btn">About</Link>
           <Link to='/products' className="text-gray-600 hover:bg-gray-800 hover:text-white p-2 rounded-btn">Products</Link>
           <Link to='/cart' className="text-gray-600 hover:bg-gray-800 hover:text-white p-2 rounded-btn">Cart</Link>
+          
+          {token && (
+            <>
+              <Link to='/order' className="text-gray-600 hover:bg-gray-800 hover:text-white p-2 rounded-btn">Order</Link>
+              <Link to='/checkout' className="text-gray-600 hover:bg-gray-800 hover:text-white p-2 rounded-btn">Checkout</Link>
+            </>
+          )}
         </div>
         <div className="flex items-center space-x-4">
           <Theme />
-          <FontAwesomeIcon icon={faShoppingCart} className="text-gray-800" />
+          <div className="relative">
+            <Link to='/cart' className="text-blue-600 flex items-center">
+              <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1">
+                {cart.length} 
+              </span>
+            </Link>
+          </div>
         </div>
       </header>
       <main className="flex-grow container mx-auto px-4 py-6">
         {children}
       </main>
-     
     </div>
   );
 }

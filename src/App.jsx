@@ -20,28 +20,27 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [cart, setCart] = useState([]);
   const [theme, setTheme] = useState('light');
+  let location = useLocation();
   let params = useParams();
 
   useEffect(() => {
     if (localStorage.getItem('cart')) {
-      setCart(JSON.parse(localStorage.getItem('cart')))
+      setCart(JSON.parse(localStorage.getItem('cart')));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      setToken(localStorage.getItem('token'));
-    } else {
-      if (
-        location.pathname.includes('about') &&
-        location.pathname.includes('cart') &&
-        location.pathname.includes('products') &&
-        location.pathname !== '/'
-      ) {
-        navigate('/login');
-      }
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+
+    if (!storedToken && (
+      location.pathname.includes('about') &&
+      location.pathname.includes('cart') &&
+      location.pathname.includes('products')
+    )) {
+      navigate('/login');
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   function PrivateRoute({ isAuth, children }) {
     if (!isAuth) {
