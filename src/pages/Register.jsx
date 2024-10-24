@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { http } from '../axios'; 
 
-function RegisterPage() {
+function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +19,9 @@ function RegisterPage() {
     })
     .then((response) => {
       console.log('Success:', response.data);
-      navigate('/'); 
+      localStorage.setItem('token', response.data.token);
+
+      navigate('/login'); 
     })
     .catch((err) => {
       console.log(err.response.data); 
@@ -82,4 +84,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage;
+export default Register;

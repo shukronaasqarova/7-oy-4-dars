@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import { CartContext } from '../App';
 
-
 const Cart = () => {
   const { cart, setCart } = useContext(CartContext);
 
   const handleRemove = (index) => {
-
     const updatedCart = cart.filter((_, i) => i !== index);
     setCart(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
@@ -17,7 +15,6 @@ const Cart = () => {
       i === index ? { ...item, quantity: amount } : item
     );
     setCart(updatedCart);
-
     localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
@@ -59,7 +56,6 @@ const Cart = () => {
                   onChange={(e) => handleAmountChange(index, parseInt(e.target.value))}
                   className="mt-2 select select-base select-bordered select-xs"
                 >
-
                   {[...Array(8)].map((_, i) => (
                     <option key={i + 1} value={i + 1}>{i + 1}</option>
                   ))}
@@ -81,6 +77,5 @@ const Cart = () => {
     </div>
   );
 };
-
 
 export default Cart;

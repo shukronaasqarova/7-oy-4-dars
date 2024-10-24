@@ -25,6 +25,7 @@ function Login() {
   };
 
   const handleGuestLogin = () => {
+    // GUEST USER bosilganda home sahifasiga o'tish
     navigate('/'); 
   };
 
@@ -58,11 +59,12 @@ function Login() {
           </div>
           <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">LOGIN</button>
           <button 
-          className="w-full bg-purple-900 text-white p-2 rounded hover:bg-purple-600 mt-4" 
-          onClick={handleGuestLogin}
-        >
-          GUEST USER
-        </button>
+            type="button" // "button" tipini qo'shing, shunda forma yuborilmaydi
+            className="w-full bg-purple-900 text-white p-2 rounded hover:bg-purple-600 mt-4" 
+            onClick={handleGuestLogin}
+          >
+            GUEST USER
+          </button>
         </form>
         <p className="mt-4 text-center">
           Not a member yet? 
@@ -73,7 +75,6 @@ function Login() {
             Register
           </span>
         </p>
-
       </div>
     </div>
   );

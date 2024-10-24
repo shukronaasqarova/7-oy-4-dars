@@ -6,7 +6,7 @@ import Theme from '../components/theme';
 import { CartContext, ThemeContext } from '../App';
 
 function MainLayout({ children }) {
-  const { cart } = useContext(CartContext); 
+  const { cart } = useContext(CartContext);
   const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
@@ -17,11 +17,27 @@ function MainLayout({ children }) {
     navigate('/');
   }
 
+  function handleLogout() {
+    localStorage.removeItem('token');
+    navigate('/login'); // Logoutdan keyin foydalanuvchini login sahifasiga yo'naltiramiz
+  }
+
+  // GUEST USER bosilganda home sahifasiga o'tish
+  function handleGuestLogin() {
+    navigate('/'); // GUEST USER bosilganda home sahifasiga o'tish
+  }
+
   return (
     <div className={`flex flex-col min-h-screen ${theme === 'light' ? 'bg-gray-100' : 'bg-gray-800'}`}>
       <div className='bg-gray-800'>
-        <Link to="/login" className="hover:underline ml-[1100px] text-gray-400 rounded">Sign in / Guest</Link>
-        <Link to="/register" className='hover:underline ml-5 text-gray-400 rounded'>Create Account</Link>
+        {!token ? (
+          <>
+            <Link to="/login" className="hover:underline ml-[1100px] text-gray-400 rounded" onClick={handleGuestLogin}>Sign in / Guest</Link>
+            <Link to="/register" className='hover:underline ml-5 text-gray-400 rounded'>Create Account</Link>
+          </>
+        ) : (
+          <button onClick={handleLogout} className="hover:underline ml-[1100px] text-gray-400 rounded">Logout</button>
+        )}
       </div>
       <header className="flex justify-around items-center bg-blue-100 p-4">
         <div>

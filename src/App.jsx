@@ -61,7 +61,7 @@ function App() {
           <Route path='/products' element={<MainLayout><Products /></MainLayout>} />
           <Route path='/details/:id' element={<MainLayout><Details /></MainLayout>} />
           <Route path='/order' element={<MainLayout><Order /></MainLayout>} />
-          <Route path='/checkout' element={<PrivateRoute isAuth={!!token}><Checkout /></PrivateRoute>} />
+          <Route path='/checkout' element={<MainLayout><PrivateRoute isAuth={!!token}><Checkout /></PrivateRoute></MainLayout>} />
           <Route path='*' element={<Errorpage />} />
         </Routes>
       </CartContext.Provider>

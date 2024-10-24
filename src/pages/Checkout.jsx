@@ -1,91 +1,85 @@
-import React, { useContext, useState } from 'react';
-import { CartContext } from '../App';
+import React, { useState } from 'react';
 
 const Checkout = () => {
-  const { cart } = useContext(CartContext); 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('credit'); 
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        address: '',
+    });
 
-  const totalPrice = cart.reduce((total, item) => total + item.attributes.price * (item.quantity || 1), 0);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:3000/api/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-    console.log('Order submitted:', { name, email, address, paymentMethod, totalPrice });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-    setName('');
-    setEmail('');
-    setAddress('');
-  };
+            const data = await response.json();
+            console.log('Checkout successful:', data);
+            // Here you can handle the successful response, like redirecting or showing a success message
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Checkout</h1>
-      {cart.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium">Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
-              required 
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="address" className="block text-sm font-medium">Address</label>
-            <input 
-              type="text" 
-              id="address" 
-              value={address} 
-              onChange={(e) => setAddress(e.target.value)} 
-              required 
-              className="mt-1 p-2 border rounded w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="payment" className="block text-sm font-medium">Payment Method</label>
-            <select 
-              id="payment" 
-              value={paymentMethod} 
-              onChange={(e) => setPaymentMethod(e.target.value)} 
-              className="mt-1 p-2 border rounded w-full"
-            >
-              <option value="credit">Credit Card</option>
-              <option value="paypal">PayPal</option>
-            </select>
-          </div>
-          <div className="mt-4">
-            <h2 className="text-xl font-bold">Total Price: ${totalPrice.toFixed(2)}</h2>
-          </div>
-          <button 
-            type="submit" 
-            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            Place Order
-          </button>
-        </form>
-      )}
-    </div>
-  );
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+    };
+
+    return (
+        <div className="checkout-container">
+            <h2>Checkout</h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="name">Name:</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="address">Address:</label>
+                    <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    );
 };
-
 
 export default Checkout;

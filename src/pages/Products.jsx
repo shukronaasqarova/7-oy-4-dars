@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { http } from "../axios";
 
 function Products() {
@@ -10,154 +10,164 @@ function Products() {
     category: 'all',
     company: 'all',
     order: 'a-z',
-    price: 100000,
+    price: 1000,
     freeShipping: false,
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = () => {
       setLoading(true);
-      try {
-        const { search, category, company, order, price, freeShipping } = filters;
+      const { search, category, company, order, price, freeShipping } = filters;
 
-        const response = await http.get(
-          `products?search=${search}&category=${category}&company=${company}&order=${order}&price=${price}${freeShipping ? '&shipping=true' : ''}`
-        );
-
+      http.get(
+        `products?search=${search}&category=${category}&company=${company}&order=${order}&price=${price}${freeShipping ? '&shipping=true' : ''}`
+      )
+      .then(response => {
         if (response.status === 200) {
           setProducts(response.data.data);
         }
-      } catch (error) {
+      })
+      .catch(error => {
         console.error(error);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
+      });
     };
 
     fetchProducts();
   }, [filters]);
 
-  if (loading) {
-    return <div className="text-center">Loading...</div>;
-  }
-
-  const handleFilterChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleFilterChange = (event) => {
+    const { name, value, type, checked } = event.target;
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
-  const resetFilters = () => {
-    setFilters({
-      search: '',
-      category: 'all',
-      company: 'all',
-      order: 'a-z',
-      price: 100000,
-      freeShipping: false,
-    });
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
+  const paginatedData = products.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Products</h1>
-
-      <div className="mb-6 p-6 border rounded-lg shadow-lg bg-white flex flex-col md:flex-row md:items-center">
-        <input
-          type="text"
-          name="search"
-          value={filters.search}
-          onChange={handleFilterChange}
-          placeholder="Search..."
-          className="border rounded-lg p-2 mb-4 md:mb-0 md:mr-4 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <select
-          name="category"
-          value={filters.category}
-          onChange={handleFilterChange}
-          className="border rounded-lg p-2 mb-4 md:mb-0 md:mr-4 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="all">All Categories</option>
-          <option value="Tables">Tables</option>
-          <option value="Chairs">Chairs</option>
-          <option value="Sofas">Sofas</option>
-          <option value="Lamps">Lamps</option>
-          <option value="Desks">Desks</option>
-        </select>
-        <select
-          name="company"
-          value={filters.company}
-          onChange={handleFilterChange}
-          className="border rounded-lg p-2 mb-4 md:mb-0 md:mr-4 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="all">All Companies</option>
-        </select>
-
-        <button
-          onClick={() => setFilters((prev) => ({ ...prev }))}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105"
-        >
-          Search
-        </button>
-        <button
-          onClick={resetFilters}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg transition-transform transform hover:scale-105 ml-4"
-        >
-          Reset
-        </button>
-        <div className="mt-4 md:mt-0 md:ml-4">
-          <label className="inline-flex items-center">
+    <div>
+      <form
+        style={{ maxWidth: "1087px" }}
+        className="bg-base-200 rounded-md px-8 mt-20 mx-auto py-4 grid gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center"
+      >
+        <div className="form-control">
+          <label htmlFor="search" className="label">
+            <span className="label-text capitalize">search product</span>
+          </label>
+          <input
+            type="search"
+            name="search"
+            className="rounded-lg input input-bordered input-sm"
+            value={filters.search}
+            onChange={handleFilterChange}
+          />
+        </div>
+        <div className="form-control">
+          <label htmlFor="category" className="label">
+            <span className="label-text capitalize">select category</span>
+          </label>
+          <select
+            name="category"
+            id="category"
+            className="rounded-lg select select-bordered select-sm"
+            value={filters.category}
+            onChange={handleFilterChange}
+          >
+            <option value="all">all</option>
+            <option value="Tables">Tables</option>
+            <option value="Chairs">Chairs</option>
+            <option value="Kids">Kids</option>
+            <option value="Sofas">Sofas</option>
+            <option value="Beds">Beds</option>
+          </select>
+        </div>
+        <div className="form-control">
+          <label htmlFor="company" className="label">
+            <span className="label-text capitalize">select company</span>
+          </label>
+          <select
+            name="company"
+            id="company"
+            className="rounded-lg select select-bordered select-sm"
+            value={filters.company}
+            onChange={handleFilterChange}
+          >
+            <option value="all">all</option>
+            <option value="Modenza">Modenza</option>
+            <option value="Luxora">Luxora</option>
+            <option value="Artifex">Artifex</option>
+            <option value="Comfora">Comfora</option>
+            <option value="Homestead">Homestead</option>
+          </select>
+        </div>
+        <div className="form-control">
+          <label htmlFor="order" className="label">
+            <span className="label-text capitalize">sort by</span>
+          </label>
+          <select
+            name="order"
+            id="order"
+            className="rounded-lg select select-bordered select-sm"
+            value={filters.order}
+            onChange={handleFilterChange}
+          >
+            <option value="a-z">A-Z</option>
+            <option value="z-a">Z-A</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+          </select>
+        </div>
+        <div className="form-control">
+          <label className="cursor-pointer label">
+            <span className="label-text">Free Shipping</span>
             <input
               type="checkbox"
               name="freeShipping"
+              className="toggle"
               checked={filters.freeShipping}
               onChange={handleFilterChange}
-              className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500"
             />
-            <span className="ml-2">Free Shipping</span>
           </label>
         </div>
-      </div>
-
-
-      <div className="mb-6 p-6 border rounded-lg shadow-lg bg-white">
-        <label htmlFor="price" className="block text-lg font-medium text-gray-700">Price: ${filters.price}</label>
-        <input
-          type="range"
-          name="price"
-          id="price"
-          min="0"
-          max="100000"
-          value={filters.price}
-          onChange={handleFilterChange}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
-      </div>
-
-      <div className="flex flex-wrap gap-4 justify-center">
-        {products.length > 0 ? (
-          products.map((product) => (
-            <Link
-              to={`/details/${product.id}`}
-              key={product.id}
-              className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-4 p-4"
-            >
-              <img
-                className="w-full h-56 object-cover rounded-xl"
-                src={product.attributes.image}
-                alt={product.attributes.title}
-              />
-              <div className="mt-2 flex flex-col items-center justify-center">
-                <h3 className="text-xl font-semibold text-gray-600 mt-5">{product.attributes.title}</h3>
-                <h3 className="text-xl font-semibold text-gray-600">${product.attributes.price}</h3>
-              </div>
-            </Link>
-          ))
+      </form>
+      <div>
+        {loading ? (
+          <p>Loading...</p>
         ) : (
-          <div className="text-gray-600 text-center">No products found!</div>
+          paginatedData.map(product => (
+            <div key={product.id}>
+              <Link to={`/products/${product.id}`}>
+                <h3>{product.name}</h3>
+                <p>{product.price}</p>
+              </Link>
+            </div>
+          ))
         )}
+      </div>
+      <div>
+        {/* Pagination controls */}
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );
