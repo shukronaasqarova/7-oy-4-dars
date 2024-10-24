@@ -25,7 +25,6 @@ function Login() {
   };
 
   const handleGuestLogin = () => {
-    // GUEST USER bosilganda home sahifasiga o'tish
     navigate('/'); 
   };
 
@@ -59,7 +58,7 @@ function Login() {
           </div>
           <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">LOGIN</button>
           <button 
-            type="button" // "button" tipini qo'shing, shunda forma yuborilmaydi
+            type="button"
             className="w-full bg-purple-900 text-white p-2 rounded hover:bg-purple-600 mt-4" 
             onClick={handleGuestLogin}
           >
