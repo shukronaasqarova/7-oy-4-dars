@@ -39,8 +39,35 @@ function Home() {
           </p>
           <button onClick={handleProductsPage} className="btn btn-primary">OUR PRODUCTS</button>
         </div>
-        <div className="flex justify-center items-center">
-          <img src="https://picsum.photos/400/300" className="rounded-lg shadow-2xl" alt="Example" />
+        <div className="carousel carousel-center bg-neutral rounded-box max-w-md space-x-4 p-4">
+          <div className="carousel-item">
+            <img
+              src="https://react-vite-comfy-store-v2.netlify.app/assets/hero1-deae5a1f.webp"
+              className="rounded-box w-[320px] h-[416px]"
+              alt="Example 1"
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              src="https://react-vite-comfy-store-v2.netlify.app/assets/hero2-2271e3ad.webp"
+              className="rounded-box w-[320px] h-[416px]"
+              alt="Example 2"
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              src="https://react-vite-comfy-store-v2.netlify.app/assets/hero3-a83f0357.webp"
+              className="rounded-box w-[320px] h-[416px]"
+              alt="Example 3"
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              src="https://react-vite-comfy-store-v2.netlify.app/assets/hero4-4b9de90e.webp"
+              className="rounded-box w-[320px] h-[416px]"
+              alt="Example 4"
+            />
+          </div>
         </div>
       </div>
 
@@ -53,7 +80,7 @@ function Home() {
               products.map(product => (
                 <div
                   key={product.id}
-                  className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-20 p-4" // Kenglik o'zgartirildi
+                  className="w-96 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-20 p-4"
                   onClick={() => handleRedirect(product.id)}
                 >
                   <img
@@ -71,7 +98,6 @@ function Home() {
               <p className="text-gray-600 text-center">No products found.</p>
             )
           }
-
         </div>
       </div>
     </div>

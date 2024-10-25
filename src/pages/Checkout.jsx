@@ -1,85 +1,67 @@
-import React, { useState } from 'react';
+import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Checkout = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        address: '',
-    });
+function Checkout() {
+  const nameRef = useRef();
+  const addressRef = useRef();
+  const formRef = useRef();
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
+  const handleCheck = (e) => {
+    e.preventDefault();
+    formRef.current.reset();
+    navigate("/order");
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:3000/api/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+      <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-6">
+          Checkout Information
+        </h2>
+        <form
+          onSubmit={handleCheck}
+          ref={formRef}
+          className="flex flex-col gap-6"
+        >
+          <div className="flex flex-col gap-2">
+            <label htmlFor="name" className="text-gray-700 dark:text-gray-300">
+              Name
+            </label>
+            <input
+              ref={nameRef}
+              type="text"
+              id="name"
+              className="py-3 px-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+          <div className="flex flex-col gap-2">
+            <label htmlFor="address" className="text-gray-700 dark:text-gray-300">
+              Address
+            </label>
+            <input
+              ref={addressRef}
+              type="text"
+              id="address"
+              className="py-3 px-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              placeholder="Enter your address"
+              required
+            />
+          </div>
 
-            const data = await response.json();
-            console.log('Checkout successful:', data);
-            // Here you can handle the successful response, like redirecting or showing a success message
-
-        } catch (error) {
-            console.error('Error during fetch:', error);
-        }
-    };
-
-    return (
-        <div className="checkout-container">
-            <h2>Checkout</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="name">Name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="address">Address:</label>
-                    <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    );
-};
+          <button
+            type="submit"
+            className="mt-4 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition duration-300"
+          >
+            PLACE YOUR ORDER
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 export default Checkout;

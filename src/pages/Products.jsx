@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // React Router Link import qiling
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProductFilters = ({ filters, handleFilterChange, resetFilters }) => {
   return (
@@ -9,9 +9,7 @@ const ProductFilters = ({ filters, handleFilterChange, resetFilters }) => {
       className="bg-gray-100 rounded-lg p-6 mt-10 mx-auto grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center shadow-lg"
     >
       <div className="form-control">
-        <label htmlFor="search" className="label text-gray-800">
-          <span className="label-text capitalize">Search Product</span>
-        </label>
+        <label htmlFor="search" className="label text-gray-800">Search Product</label>
         <input
           type="search"
           name="search"
@@ -24,30 +22,25 @@ const ProductFilters = ({ filters, handleFilterChange, resetFilters }) => {
 
       <FilterSelect
         name="category"
-        label="Select Category"
         options={["all", "Tables", "Chairs", "Kids", "Sofas", "Beds"]}
         value={filters.category}
         handleChange={handleFilterChange}
       />
       <FilterSelect
         name="company"
-        label="Select Company"
         options={["all", "Modenza", "Luxora", "Artifex", "Comfora", "Homestead"]}
         value={filters.company}
         handleChange={handleFilterChange}
       />
       <FilterSelect
         name="order"
-        label="Sort By"
         options={["a-z", "z-a", "low-high", "high-low"]}
         value={filters.order}
         handleChange={handleFilterChange}
       />
-
+      
       <div className="form-control">
-        <label htmlFor="price" className="label text-gray-800">
-          <span className="label-text capitalize">Max Price</span>
-        </label>
+        <label htmlFor="price" className="label text-gray-800">Max Price</label>
         <input
           type="range"
           name="price"
@@ -63,7 +56,7 @@ const ProductFilters = ({ filters, handleFilterChange, resetFilters }) => {
 
       <div className="form-control">
         <label htmlFor="freeShipping" className="label cursor-pointer text-gray-800">
-          <span className="label-text capitalize">Free Shipping</span>
+          Free Shipping
           <input
             type="checkbox"
             name="freeShipping"
@@ -74,23 +67,17 @@ const ProductFilters = ({ filters, handleFilterChange, resetFilters }) => {
         </label>
       </div>
       <div className="flex space-x-2">
-        <button type="button" className="btn btn-outline" onClick={resetFilters}>
-          Reset
-        </button>
-        <button type="button" className="btn btn-primary" onClick={() => console.log('Search action here')}>
-          Search
-        </button>
+        <button type="button" className="btn btn-outline" onClick={resetFilters}>Reset</button>
+        <button type="button" className="btn btn-primary" onClick={() => console.log('Search action here')}>Search</button>
       </div>
     </form>
   );
 };
 
-const FilterSelect = ({ name, label, options, value, handleChange }) => {
+const FilterSelect = ({ name, options, value, handleChange }) => {
   return (
     <div className="form-control">
-      <label htmlFor={name} className="label text-gray-800">
-        <span className="label-text capitalize">{label}</span>
-      </label>
+      <label htmlFor={name} className="label text-gray-800">{name}</label>
       <select
         name={name}
         id={name}
@@ -107,25 +94,25 @@ const FilterSelect = ({ name, label, options, value, handleChange }) => {
 };
 
 const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
   return (
-    <Link to={`/product/${product.id}`}> {/* Har bir kartani Link ichiga o'ralash */}
-      <div className="w-full bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-10 p-4">
-        <img
-          className="w-full h-56 object-cover rounded-t-lg"
-          src={product.attributes.image}
-          alt={product.attributes.name}
-        />
-        <div className="mt-4 flex flex-col items-center">
-          <h3 className="text-lg font-semibold text-gray-800">{product.attributes.name}</h3>
-          <h3 className="text-lg font-bold text-gray-900 mt-1">${product.attributes.price}</h3>
-        </div>
-        <button className="mt-4 w-full btn btn-primary">
-          Add to Cart
-        </button>
+    <div
+      onClick={() => navigate(`/details/${product.id}`)}
+      className=" bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer overflow-hidden mt-20 p-4"
+    >
+      <img
+        className="w-full h-56 object-cover rounded-xl"
+        src={product.attributes.image}
+        alt={product.attributes.title}
+      />
+      <div className="mt-2 flex flex-col items-center justify-center">
+        <h3 className="text-xl font-semibold text-gray-600 mt-5">{product.attributes.title}</h3>
+        <h3 className="text-xl font-semibold text-gray-600">${product.attributes.price}</h3>
       </div>
-    </Link>
+    </div>
   );
 };
+
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -145,7 +132,7 @@ function Products() {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://strapi-store-server.onrender.com/api/products?featured=true`);
+        const response = await axios.get("https://strapi-store-server.onrender.com/api/products");
         if (response.status === 200) {
           setProducts(response.data.data);
         }
@@ -156,7 +143,7 @@ function Products() {
       }
     };
     fetchProducts();
-  }, [filters]);
+  }, []);
 
   const handleFilterChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -189,7 +176,7 @@ function Products() {
       ) : paginatedData.length === 0 ? (
         <p className="text-center mt-20">No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> {/* gap-6 o'rniga gap-4 */}
           {paginatedData.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
